@@ -4,8 +4,10 @@ import pickle
 import subprocess
 import time
 
+PATH = os.getcwd()
+
 # load in the settings
-f = open(".config.cfg", "rb")
+f = open(f"{PATH}/config.cfg", "rb")
 settings = pickle.load(f)
 f.close()
 
@@ -16,7 +18,7 @@ FAIL = '\033[91m'
 
 PROBLEM_ID = settings["PROBLEM_ID"]
 
-out_file = open(f"{PROBLEM_ID}.out", "r")
+out_file = open(f"{PATH}/{PROBLEM_ID}.out", "r")
 ans = []
 for line in out_file:
     s = line.strip().replace('\n', "")
@@ -25,7 +27,7 @@ for line in out_file:
 out_file.close()
 
 print(f"[DEBUG] Compiling {PROBLEM_ID}.cpp")
-os.system(f"g++ {PROBLEM_ID}.cpp -std=c++17 -o {PROBLEM_ID}")
+os.system(f"g++ {PATH}/{PROBLEM_ID}.cpp -std=c++17 -o {PATH}/{PROBLEM_ID}")
 result = []
 delta = 0
 
@@ -33,19 +35,19 @@ case_cnt = settings["case cnt"]
 
 if settings["single case"]:
     start = time.perf_counter()
-    out = subprocess.check_output(f"./{PROBLEM_ID} < {PROBLEM_ID}.in", shell=True, universal_newlines=True)
+    out = subprocess.check_output(f"{PATH}/{PROBLEM_ID} < {PATH}/{PROBLEM_ID}.in", shell=True, universal_newlines=True)
     delta = time.perf_counter() - start
     result = out.splitlines()
 else:
     inp = []
-    in_file = open(f"{PROBLEM_ID}.in", "r")
+    in_file = open(f"{PATH}/{PROBLEM_ID}.in", "r")
 
     for line in in_file:
         inp.append(line)
 
     for i in range(case_cnt):
         start = time.perf_counter()
-        out = subprocess.run([f"./{PROBLEM_ID}"], stdout=subprocess.PIPE, text=True, input=inp[i])
+        out = subprocess.run([f"{PATH}/{PROBLEM_ID}"], stdout=subprocess.PIPE, text=True, input=inp[i])
         temp_delta = time.perf_counter() - start
 
         delta += temp_delta
