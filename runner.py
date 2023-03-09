@@ -15,6 +15,7 @@ f.close()
 ACCEPTED = '\033[92m'
 WARNING = '\033[93m'
 FAIL = '\033[91m'
+NORMAL = '\33[0m'
 
 PROBLEM_ID = settings["PROBLEM_ID"]
 
@@ -59,23 +60,23 @@ accepted = True
 
 if len(ans) != len(result):
     print(WARNING + "[WARNING] Unexpected output length!")
-    print("Aborted.")
-    sys.exit()
+    accepted = False
+    missmatches = [i + 1 for i in range(case_cnt)]
+    print(NORMAL, end="")
+else:
+    missmatches = []
+    for i in range(len(ans)):
+        if result[i] != ans[i]:
+            missmatches.append(i + 1)
+            accepted = False
+        else:
+            passed_tests += 1
 
-
-missmatches = []
-for i in range(len(ans)):
-    if result[i] != ans[i]:
-        missmatches.append(i + 1)
-        accepted = False
-    else:
-        passed_tests += 1
-
-if settings["single case"]:
-    if passed_tests != len(ans):
-        passed_tests = 0
-    else:
-        passed_tests = 1
+    if settings["single case"]:
+        if passed_tests != len(ans):
+            passed_tests = 0
+        else:
+            passed_tests = 1
 
 # output
 print(f"Time: {delta:.2f} ms")
@@ -93,7 +94,7 @@ print("---------------")
 if accepted:
     print(ACCEPTED + "Passed!\n")
 else:
-    print("Missmatch at cases ", end="")
+    print("Missmatch at ", end="")
     for i in range(len(missmatches) - 1):
         print(str(missmatches[i]) + ", ", end="")
 

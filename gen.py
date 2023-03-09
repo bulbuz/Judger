@@ -13,6 +13,10 @@ settings = {
 CONTEST_ID = sys.argv[1] # contest id (not contest number)
 PROBLEM_ID = sys.argv[2].capitalize() # problem letter (TODO: make it optional)
 
+if len(sys.argv) == 4:
+    TEMPLATE_PATH = sys.argv[3]
+    os.system(f"cat {TEMPLATE_PATH} > {PROBLEM_ID}.cpp")
+
 PATH = os.getcwd()
 
 url = "https://www.codeforces.com/contest/" + CONTEST_ID + "/problem/" + PROBLEM_ID
@@ -23,7 +27,6 @@ if not req.ok:
 
 soup = BeautifulSoup(req.content, 'html.parser')
 case_div = soup.find("div", {"class": "sample-test"})
-
 
 input_div = case_div.find_all("div", {"class": "input"})
 case_cnt = len(input_div)
